@@ -33,5 +33,19 @@ class UserModelCase(unittest.TestCase):
 			)
 
 
+		phones = ['+7 999 999 99 99', '+7 987 789 99 99', '+7 978 078 77 77']
+		for phone in phones:
+			self.assertTrue(
+				get_str_type(phone) == 'phone'
+			)
+
+		not_phones  = ['-7 999 999 99 99', '+7 999 -99 9- 99', '+7 9a9 999 99 b9']
+		not_phones += ['+7 999 999 99 99 893', '+7 999 888', '+7 90 99 99 999 99']
+		for noise in not_phones:
+			self.assertFalse(
+				get_str_type(noise) == 'phone'
+			)
+
+
 if __name__ == '__main__':
 	unittest.main(verbosity=2)
