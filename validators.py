@@ -1,4 +1,5 @@
 from datetime import datetime
+from re import match
 
 
 def is_date(field_value):
@@ -39,6 +40,12 @@ def is_phone(field_value):
 		return False
 
 
+def is_email(field_value):
+	if match(r'[^@]+@[^@]+\.[^@]+', field_value):
+		return True
+	return False
+
+
 def get_str_type(field_value):
 	if is_date(field_value):
 		return 'date'
@@ -46,7 +53,7 @@ def get_str_type(field_value):
 	if is_phone(field_value):
 		return 'phone'
 
-	# if field_value ...:
-	# 	return 'email'
+	if is_email(field_value):
+		return 'email'
 
 	return 'text'

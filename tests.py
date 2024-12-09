@@ -19,6 +19,7 @@ class UserModelCase(unittest.TestCase):
 		)
 
 	def test_validators(self):
+		# Dates
 		dates  = ['12.05.2018', '12.5.2018', '07.02.2020', '7.2.2020']
 		dates += ['01.09.2021', '1.9.2021', '08.11.2022', '8.11.2022']
 		for date in dates:
@@ -26,13 +27,13 @@ class UserModelCase(unittest.TestCase):
 				get_str_type(date) == 'date'
 			)
 
-		not_dates = ['test', '+7 999 999 99 99', 'mail@gmail.com']
+		not_dates = ['12_05.2018', '12.05.12.2018', '12-2018-05','2018-05-12-12']
 		for noise in not_dates:
 			self.assertFalse(
 				get_str_type(noise) == 'date'
 			)
 
-
+		# Phones
 		phones = ['+7 999 999 99 99', '+7 987 789 99 99', '+7 978 078 77 77']
 		for phone in phones:
 			self.assertTrue(
@@ -44,6 +45,26 @@ class UserModelCase(unittest.TestCase):
 		for noise in not_phones:
 			self.assertFalse(
 				get_str_type(noise) == 'phone'
+			)
+
+		# Emails
+		emails = ['mail@gmail.com', 'full@example.com', 'example@whatever.com']
+		for email in emails:
+			self.assertTrue(
+				get_str_type(email) == 'email'
+			)
+
+		not_emails = ['wrong@example,com', 'wrong-example', 'wrong@', '@example.com']
+		for noise in not_emails:
+			self.assertFalse(
+				get_str_type(noise) == 'email'
+			)
+
+		# Texts
+		texts = not_dates + not_phones + not_emails
+		for text in texts:
+			self.assertTrue(
+				get_str_type(text) == 'text'
 			)
 
 
