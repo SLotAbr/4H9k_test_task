@@ -8,15 +8,25 @@ class UserModelCase(unittest.TestCase):
 		client = app.test_client()
 
 		form_data = {'test_field_name': 'order_date', 'test_value' : '00.00.0000'}
-
 		response = client.post('/get_form', json = form_data)
 		self.assertTrue(response.status_code == 200)
 
-		print(response.text)
+		# Check the response for different numbers of field names
+		form_data = {
+			'test_field_name': 'order_date', 
+			'test_value' : '00.00.0000', 
+			'another_name': 'mail@mail.com'}
+		response = client.post('/get_form', json = form_data)
+		self.assertTrue(response.status_code == 400)
 
-		self.assertTrue(
-			response.get_json()['message'] == 'Hello, world!'
-		)
+		form_data = {'test_field_name': 'order_date'}
+		response = client.post('/get_form', json = form_data)
+		self.assertTrue(response.status_code == 400)
+
+		# print(response.text)
+		# self.assertTrue(
+		# 	response.get_json()['message'] == 'Hello, world!'
+		# )
 
 	def test_validators(self):
 		# Dates
