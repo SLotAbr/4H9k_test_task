@@ -17,8 +17,6 @@ def get_form():
 		payload = {'error': HTTP_STATUS_CODES.get(400)}
 		return payload, 400
 
-	# test-driven development
-
 	keys = list(fields.keys())
 	parameters = { 
 		keys[0]: get_str_type(fields[keys[0]]),  
