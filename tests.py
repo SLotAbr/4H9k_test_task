@@ -4,7 +4,7 @@ from validators import get_str_type
 
 
 class UserModelCase(unittest.TestCase):
-	def test_basic_response(self):
+	def test_basic_responses(self):
 		client = app.test_client()
 
 		form_data = {'test_field_name': 'order_date', 'test_value' : '00.00.0000'}
@@ -22,11 +22,6 @@ class UserModelCase(unittest.TestCase):
 		form_data = {'test_field_name': 'order_date'}
 		response = client.post('/get_form', json = form_data)
 		self.assertTrue(response.status_code == 400)
-
-		# print(response.text)
-		# self.assertTrue(
-		# 	response.get_json()['message'] == 'Hello, world!'
-		# )
 
 	def test_validators(self):
 		# Dates
@@ -76,6 +71,36 @@ class UserModelCase(unittest.TestCase):
 			self.assertTrue(
 				get_str_type(text) == 'text'
 			)
+
+	def test_search_function(self):
+		client = app.test_client()
+
+		# 2 form names
+		form_data = {'user_name': 'the end', 'order_date' : '09.12.2024'}
+		response = client.post('/get_form', json = form_data)
+		self.assertEqual(response.get_json(),
+			{'result': ['Order Form', 'Order Form with phone number']}
+		) 
+
+		# a single form name
+		form_data = {'user_name': 'the end', 'number' : '+7 123 456 78 90'}
+		response = client.post('/get_form', json = form_data)
+		self.assertEqual(response.get_json(),
+			{'result': ['Order Form with phone number']}
+		) 
+		# another one
+		form_data = {'user_name': 'the end', 'lead_email' : 'completed@task.com'}
+		response = client.post('/get_form', json = form_data)
+		self.assertEqual(response.get_json(),
+			{'result': ['Order Form']}
+		)
+
+		# no name at all
+		form_data = {'user_nickname': 'name', 'OrderDate' : '09.12.2024'}
+		response = client.post('/get_form', json = form_data)
+		self.assertEqual(response.get_json(),
+			{'user_nickname': 'text', 'OrderDate' : 'date'}
+		)
 
 
 if __name__ == '__main__':
